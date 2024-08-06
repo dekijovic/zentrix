@@ -7,8 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc -p ./",
     "start": "ts-node src/app.ts",
-    "watch": "tsc -p ./ -w",
-    "watch:start": "node dist/app.js -w"
+    "watch": "tsc -p ./ -w"
   },
   "keywords": [],
   "author": "",
@@ -18,14 +17,15 @@
     "@types/express": "^4.17.21",
     "@types/node": "^22.1.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "npm-watch": "^0.13.0"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
     "express": "^4.19.2",
     "mongoose": "^8.5.2",
-    "npm-watch": "^0.13.0",
     "ts-node-dev": "^2.0.0"
   }
 }

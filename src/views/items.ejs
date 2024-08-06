@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To do list</title>
+  <style>
+  body, html {
+        height: 100%;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: Arial, sans-serif;
+      }
+
+      .container {
+        text-align: center;
+        max-width: 400px;
+        width: 100%;
+      }
+
+      form {
+        margin-top: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
+
+      input {
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+          }
+
+      button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+      .strikethrough {
+        text-decoration: line-through;
+      }
+    </style>
+</head>
+<body>
+<div class="container">
+<a href="/">return to the users</a>
+  <h1>TO DO List</h1>
+  <ul id="item-list">
+  <% if (items.length > 0) { %>
+    <% items.forEach(item => { %>
+      <li class="<%= item.done ? 'strikethrough' : '' %>">
+      <% if (!item.done) { %>
+                <input type="checkbox" class="deactivate-checkbox" data-index="<%= item._id %>">
+              <% } %>
+              <%= item.name %> </li>
+      <% }); %>
+    <% } %>
+  </ul>
+
+  <h2>Add New Item</h2>
+    <form id="item-form">
+      <label for="name">Item Name:</label>
+      <input type="text" id="name" name="name" required>
+      <br>
+      <input type="hidden" id="listId" name="listId" value="<%= listId %>">
+      <br>
+      <button type="submit">Add Item</button>
+    </form>
+    </div>
+    <script>
+        document.getElementById('item-form').addEventListener('submit', async function(event) {
+          event.preventDefault();
+
+          const name = document.getElementById('name').value;
+          const listId = document.getElementById('listId').value;
+
+          const response = await fetch('/api/item', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, listId })
+          });
+
+          if (response.ok) {
+            location.reload()
+          } else {
+            alert('Failed to add item');
+          }
+        });
+
+        document.getElementById('item-list').addEventListener('change', async function(event) {
+              if (event.target.classList.contains('deactivate-checkbox')) {
+                const index = event.target.dataset.index;
+
+                const response = await fetch(`/api/item/${index}/done`, {
+                  method: 'PUT',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({})
+                });
+
+                if (response.ok) {
+                location.reload()
+                } else {
+                  alert('Failed to update item');
+                }
+              }
+            });
+      </script>
+</body>
+</html>

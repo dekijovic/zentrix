@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User's To-Do Lists</title>
+  <style>
+      body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+          }
+
+          .container {
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+          }
+
+          form {
+            margin-top: 20px;
+          }
+
+          label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+          }
+        </style>
+</head>
+<body>
+<div class="container">
+  <h1>User's To-Do Lists</h1>
+  <ul id="user-list">
+  <% if (lists.length > 0) { %>
+    <% lists.forEach(list => { %>
+      <li><a href="/list/<%= list._id %>"><%= list.name %></a></li>
+      <% }); %>
+    <% } %>
+  </ul>
+  <h2>Add New List</h2>
+      <form id="list-form">
+        <label for="name">List Name:</label>
+        <input type="text" id="name" name="name" required>
+        <br>
+        <input type="hidden" id="userId" name="userId" value="<%= userId %>">
+        <br>
+        <button type="submit">Add List</button>
+      </form>
+  </div>
+   <script>
+          document.getElementById('list-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const userId = document.getElementById('userId').value;
+
+            const response = await fetch('/api/lists', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ name, userId })
+            });
+
+            if (response.ok) {
+              location.reload()
+            } else {
+              alert('Failed to add item');
+            }
+          });
+        </script>
+</body>
+</html>
